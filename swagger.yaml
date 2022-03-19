@@ -1,0 +1,525 @@
+swagger: "2.0"
+info:
+  description: "LioKor Code - system for studying programming"
+  version: "0.1.1"
+  title: "LioKor Code"
+  contact:
+    email: "support@liokor.com"
+  license:
+    name: "MIT"
+host: "code.liokor.com"
+basePath: "/api/v1"
+schemes:
+- "http"
+paths:
+  /users:
+    post:
+      tags:
+      - "users"
+      summary: "Creates new user"
+      description: ""
+      operationId: "createUser"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "Created user object"
+        required: true
+        schema:
+          $ref: "#/definitions/UserSignup"
+      responses:
+        "200":
+          description: "successful operation"
+        "400":
+          description: "Invalid user data provided"
+        "409":
+          description: "Username already taken"
+  /user/auth:
+    post:
+      tags:
+      - "user"
+      summary: "Authenticates user and sets session cookie"
+      description: ""
+      operationId: "authUser"
+      consumes:
+      - "application/json"
+      produces:
+      - "application/json"
+      parameters:
+      - in: "body"
+        name: "authData"
+        description: "User auth data"
+        required: true
+        schema:
+          $ref: "#/definitions/UserAuth"
+      responses:
+        "200":
+          description: "Successful authentication"
+        "400":
+          description: "Invalid data in request"
+        "403":
+          description: "Invalid login or password"
+  /user/session:
+    delete:
+      tags:
+      - "user"
+      summary: "Removes user's session from db"
+      description: ""
+      operationId: "logoutUser"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        "200":
+          description: "successful operation"
+        "401":
+          description: "Not authenticated"
+  /user:
+    get:
+      tags:
+      - "user"
+      summary: "Returns authenticated user data"
+      responses:
+        "200":
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/UserInfo"
+        "401":
+          description: "Not authenticated"
+  #   put:
+  #     tags:
+  #     - "user"
+  #     summary: "Update current user"
+  #     description: "Must be authenticated as {username}"
+  #     operationId: "updateUser"
+  #     produces:
+  #     - "application/json"
+  #     parameters:
+  #     - in: "body"
+  #       name: "body"
+  #       description: "Updated user object"
+  #       required: true
+  #       schema:
+  #         $ref: "#/definitions/User"
+  #     responses:
+  #       "200":
+  #           description: "User updated successfully"
+  #       "400":
+  #         description: "Invalid user data provided"
+  #       "401":
+  #         description: "Access denied"
+  #       "404":
+  #         description: "User not found"
+  # /user/password:
+  #   put:
+  #     tags:
+  #     - "user"
+  #     summary: "Changes password of a user specified by username"
+  #     description: "Must be authenticated as {username}"
+  #     operationId: "updateUserPassword"
+  #     produces:
+  #     - "application/json"
+  #     parameters:
+  #     - in: "body"
+  #       name: "body"
+  #       description: "Updated user object"
+  #       required: true
+  #       schema:
+  #         $ref: "#/definitions/passwordChange"
+  #     responses:
+  #       "200":
+  #         description: "Password changed successfully"
+  #       "400":
+  #         description: "Invalid password data provided"
+  #       "401":
+  #         description: "Access denied"
+  #       "404":
+  #         description: "User not found"
+  # /user/avatar:
+  #   put:
+  #     tags:
+  #     - "user"
+  #     summary: "Changes avatar of a user specified by username"
+  #     description: "Must be authenticated as {username}"
+  #     operationId: "updateUserAvatar"
+  #     produces:
+  #     - "application/json"
+  #     parameters:
+  #     - in: "body"
+  #       name: "body"
+  #       description: "new avatar as data url"
+  #       required: true
+  #       schema:
+  #         $ref: "#/definitions/avatarChange"
+  #     responses:
+  #       "200":
+  #         description: "Avatar changed successfully"
+  #       "400":
+  #         description: "Invalid data provided"
+  #       "401":
+  #         description: "Access denied"
+  #       "404":
+  #         description: "User not found"
+  /tasks:
+    post:
+      tags:
+      - "tasks"
+      summary: "Creates new task"
+      responses:
+        "200":
+          description: "ok"
+          schema:
+            $ref: "#/definitions/TaskCreate"
+    get:
+      tags:
+      - "tasks"
+      summary: "Returns all existing tasks"
+      responses:
+        "200":
+          description: "ok"
+          schema:
+            $ref: "#/definitions/TaskList"
+  /tasks/{taskId}:
+    get:
+      tags:
+      - "tasks"
+      summary: "Returns info about the task"
+      parameters:
+      - name: "taskId"
+        in: "path"
+        required: true
+        type: "integer"
+      responses:
+        "200":
+          description: "ok"
+          schema:
+            $ref: "#/definitions/TaskInfo"
+    put:
+      tags:
+      - "tasks"
+      summary: "Updates info about the task"
+      description: "After this update all solutions should have button to rerun"
+      parameters:
+      - name: "taskId"
+        in: "path"
+        required: true
+        type: "integer"
+      responses:
+        "200":
+          description: "ok"
+          schema:
+            $ref: "#/definitions/TaskCreate"
+    delete:
+      tags:
+      - "tasks"
+      summary: "Deletes specified task"
+      parameters:
+      - name: "taskId"
+        in: "path"
+        required: true
+        type: "integer"
+      responses:
+        "200":
+          description: "ok"
+  /tasks/{taskId}/solutions:
+    post:
+      tags:
+      - "solutions"
+      summary: "Sends solution to the server"
+      parameters:
+      - name: "taskId"
+        in: "path"
+        required: true
+        type: "integer"
+      - in: body 
+        name: TaskSolution
+        schema:
+          $ref: "#/definitions/TaskSolutionSend"
+      consumes: 
+        - application/json
+      responses:
+        "200":
+          description: "ok"
+          schema:
+            type: "object"
+            properties:
+              id:
+                type: integer
+    get:
+      tags:
+      - "solutions"
+      summary: "Returns all previous solutions of this task"
+      parameters:
+      - name: "taskId"
+        in: "path"
+        required: true
+        type: "integer"
+      responses:
+        "200":
+          description: "ok"
+          schema:
+            $ref: "#/definitions/TaskSolutions"
+  /tasks/{taskId}/solutions/{solutionId}:
+    get:
+      tags:
+      - "solutions"
+      summary: "Returns info about specified solution"
+      parameters:
+      - name: "taskId"
+        in: "path"
+        required: true
+        type: "integer"
+      - name: "solutionId"
+        in: "path"
+        required: true
+        type: "integer"
+      responses:
+        "200":
+          description: "ok"
+          schema:
+            $ref: "#/definitions/TaskSolution"
+    delete:
+      tags:
+      - "solutions"
+      summary: "Deletes solution"
+      parameters:
+      - name: taskId
+        in: path
+        required: true
+        type: integer
+      - name: solutionId
+        in: path
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: "ok"
+definitions:
+  UserInfo:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+        example: 1
+      username:
+        type: "string"
+        example: "Wolf"
+      email:
+        type: "string"
+        example: "wolf@liokor.ru"
+      password:
+        type: "string"
+        example: "qwerty123"
+      fullname:
+        type: "string"
+        example: "Leo Volkov"
+      avatarUrl:
+        type: "string"
+        example: "/media/avatars/wolf.jpg"
+      joinedDate:
+        type: "string"
+        example: ""
+      isAdmin:
+        type: "boolean"
+        example: false
+  UserSignup:
+    type: "object"
+    properties:
+      # id:
+      #   type: "integer"
+      #   format: "int64"
+      #   example: 1
+      username:
+        type: "string"
+        example: "Wolf"
+      email:
+        type: "string"
+        example: "wolf@liokor.ru"
+      password:
+        type: "string"
+        example: "qwerty123"
+      fullname:
+        type: "string"
+        example: "Leo Volkov"
+      # avatarUrl:
+      #   type: "string"
+      #   example: "/media/avatars/wolf.jpg"
+      # joinedDate:
+      #   type: "string"
+      #   example: ""
+      # isAdmin:
+      #   type: "boolean"
+      #   example: false
+  UserAuth:
+    type: "object"
+    required:
+    - "username"
+    - "password"
+    properties:
+      username:
+        type: "string"
+      password:
+        type: "string"
+  # passwordChange:
+  #   type: "object"
+  #   required:
+  #   - "oldPassword"
+  #   - "newPassword"
+  #   properties:
+  #     oldPassword:
+  #       type: "string"
+  #     newPassword:
+  #       type: "string"
+  # avatarChange:
+  #   type: "object"
+  #   required:
+  #   - "avatarUrl"
+  #   properties:
+  #     avatarUrl:
+  #       type: "string"
+  #       example: "data:image/jpeg;base64,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"
+  TaskCreate:
+    type: object
+    properties:
+      name:
+        type: string
+        example: Sum of two numbers
+      description:
+        type: string
+      stdinDescription:
+        type: string
+      stdoutDescription:
+        type: string
+      hints:
+        type: string
+      tests:
+        type: array
+        items:
+          type: array
+          items: {}
+          example: ["1 2", "3"]
+  TaskInfo:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        example: 1
+      name:
+        type: "string"
+        example: "Sum of two numbers"
+      description:
+        type: "string"
+        example: "Given two numbers. Calculate their sum."
+      stdinDescription:
+        type: "string"
+        example: "-2^31 <= a <= 2^32, -2^31 <= b <= 2^32"
+      stdoutDescription:
+        type: "string"
+        example: "c = a + b"
+      hints:
+        type: "string"
+        example: "It's a very easy task"
+      testsAmount:
+        type: "integer"
+        description: "Total tests amount"
+        example: 10
+      testsExamples:
+        type: "array"
+        description: "first 2 tests of the task for example"
+        items:
+          type: "array"
+          items: {}
+        example: [
+          [
+            "1 2", 
+            "3"
+          ],
+          [
+            "-2 2", 
+            "0"
+          ],
+        ]
+  TaskSolutionSend:
+    type: "object"
+    properties:
+      sourceCode:
+        type: "string"
+        description: "one c file for now"
+        example: "int main() {\n return 0; \n }"
+      makefile:
+        type: "string"
+        description: "info about compiling the program"
+        example: "a.out:\n  gcc main.c"
+  TaskSolutions:
+    type: "array"
+    items:
+      type: "object"
+      properties:
+        id: 
+          type: "integer"
+        receivedDatetime:
+          type: "string"
+        checkDatetime:
+          type: "string"
+        checkResult:
+          type: "integer"
+          description: "0 - ok, 1 - checking, 2 - compile error, 3 - runtime error, 4 - check error, 5 - timeout"
+        testsPassed: 
+          type: "integer"
+        testsTotal:
+          type: "integer"
+  TaskSolution:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+      receivedDatetime:
+        type: "string"
+        description: "When task was received to check"
+      checkDatetime:
+        type: "string"
+        description: "When task was checked"
+      checkResult:
+        type: "integer"
+        description: "0 - ok, 1 - compile error, 2 - runtime error, 3 - check error, 4 - timeout, 5 - outdated (task changed)"
+      checkError:
+        type: "string"
+        description: "Empty or error text (compiler, runtime...)"
+      tests:
+        type: "array"
+        items:
+          type: "object"
+          properties:
+            stdin:
+              type: "string"
+            stdout:
+              type: "string"
+            passed:
+              type: "boolean"
+      sourceCode:
+        type: "string"
+        description: "one c file for now"
+        example: "int main() {\n return 0; \n }"
+      makefile:
+        type: "string"
+        description: "Makefile used to build solution binary"
+        example: "a.out:\n  gcc main.c"
+  TaskList:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        name:
+          type: string
+          example: "Sum of two numbers"
+        description:
+          type: string
+          example: "Simple task: just sum of two numbers"
+        testsAmount:
+          type: integer
+          example: 10
