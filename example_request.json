@@ -1,0 +1,22 @@
+{
+    "sourceCode": {
+        "Makefile": "solution: main.c sum.o\n\tgcc main.c sum.o -o solution\nrun: solution\n\t./solution\nsum.o: lib/sum.h lib/sum.c\n\tgcc -c lib/sum.c",
+        "main.c": "#include \"stdio.h\"\n#include \"lib/sum.h\"\nint main() {\nint a, b;\nscanf(\"%d %d\", &a, &b);\nprintf(\"%d\", sum(a, b));\nreturn 0;\n}",
+        "lib/sum.c": "#include \"sum.h\"\nint sum(int a, int b) {\nreturn a + b;\n}",
+        "lib/sum.h": "int sum(int, int);"
+    },
+    "tests": [
+        [
+            "1 2",
+            "3"
+        ],
+        [
+            "4 5",
+            "9"
+        ],
+        [
+            "-2 2",
+            "0"
+        ]
+    ]
+}
