@@ -485,7 +485,7 @@ definitions:
           type: "string"
         checkResult:
           type: "integer"
-          description: "0 - ok, 1 - checking, 2 - compile error, 3 - runtime error, 4 - check error, 5 - outdated, 6 - runtime timeout, 7 - compile timeout"
+          description: "0 - ok, 1 - checking, 2 - compile error, 3 - runtime error, 4 - check error, 5 - outdated, 6 - runtime timeout, 7 - compile timeout, 8 - lint error, 9 - draft"
         testsPassed: 
           type: "integer"
         testsTotal:
@@ -503,7 +503,7 @@ definitions:
         description: "When task was checked"
       checkResult:
         type: "integer"
-        description: "0 - ok, 1 - checking, 2 - compile error, 3 - runtime error, 4 - check error, 5 - outdated, 6 - runtime timeout, 7 - compile timeout"
+        description: "0 - ok, 1 - checking, 2 - compile error, 3 - runtime error, 4 - check error, 5 - outdated, 6 - runtime timeout, 7 - compile timeout, 8 - lint error, 9 - draft"
       checkError:
         type: "string"
         description: "Empty or error text (compiler, runtime...)"
