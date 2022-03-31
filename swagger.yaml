@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   description: "LioKor Code - system for studying programming"
-  version: "0.1.1"
+  version: "0.2.0"
   title: "LioKor Code"
   contact:
     email: "support@liokor.com"
@@ -278,7 +278,7 @@ paths:
         "200":
           description: "ok"
           schema:
-            $ref: "#/definitions/TaskSolution"
+            $ref: "#/definitions/TaskSolutionDetailed"
     delete:
       tags:
       - "solutions"
@@ -472,71 +472,71 @@ definitions:
           a_lot_of_files...:
             type: string
             example: "a lot of code..."
+  TaskSolution:
+    type: object
+    properties:
+      id:
+        type: integer
+      receivedDatetime:
+        type: string
+        description: "When task was received to check"
+      checkedDatetime:
+        type: string
+        description: "When task was checked"
+      checkResult:
+        type: integer
+        description: "0 - ok, 1 - checking, 2 - compile error, 3 - runtime error, 4 - check error, 5 - outdated, 6 - runtime timeout, 7 - compile timeout, 8 - lint error, 9 - draft"
+      checkMessage:
+        type: string
+        description: "Empty or error text (linter, compiler, runtime...)"
+      checkTime:
+        type: number
+        description: "Time in which all passed tests completed"
+      compileTime:
+        type: number
+        description: "Time spent to compile the binary"
+      testsPassed:
+        type: integer
+        description: "Amount of tests that were successful"
   TaskSolutions:
     type: "array"
     items:
-      type: "object"
-      properties:
-        id: 
-          type: "integer"
-        receivedDatetime:
-          type: "string"
-        checkDatetime:
-          type: "string"
-        checkResult:
-          type: "integer"
-          description: "0 - ok, 1 - checking, 2 - compile error, 3 - runtime error, 4 - check error, 5 - outdated, 6 - runtime timeout, 7 - compile timeout, 8 - lint error, 9 - draft"
-        testsPassed: 
-          type: "integer"
-        testsTotal:
-          type: "integer"
-  TaskSolution:
-    type: "object"
-    properties:
-      id:
-        type: "integer"
-      receivedDatetime:
-        type: "string"
-        description: "When task was received to check"
-      checkDatetime:
-        type: "string"
-        description: "When task was checked"
-      checkResult:
-        type: "integer"
-        description: "0 - ok, 1 - checking, 2 - compile error, 3 - runtime error, 4 - check error, 5 - outdated, 6 - runtime timeout, 7 - compile timeout, 8 - lint error, 9 - draft"
-      checkError:
-        type: "string"
-        description: "Empty or error text (compiler, runtime...)"
-      tests:
-        type: "array"
-        items:
-          type: "object"
-          properties:
-            stdin:
-              type: "string"
-            stdout:
-              type: "string"
-            passed:
-              type: "boolean"
-      sourceCode:
-        type: object
-        description: "one c file for now"
-        properties:
-          lib/sum.c:
-            type: string
-            example: "..."
-          lib/sum.h:
-            type: string
-            example: "..."
-          main.c:
-            type: string
-            example: "int main() {\n return 0; \n }"
-          Makefile:
-            type: string
-            example: "a.out:\n  gcc main.c"
-          a_lot_of_files...:
-            type: string
-            example: "a lot of code..."
+      allOf:
+        - $ref: '#/definitions/TaskSolution'
+  TaskSolutionDetailed:
+    allOf:
+      - $ref: "#/definitions/TaskSolution"
+      - properties:
+          tests:
+            type: "array"
+            items:
+              type: "object"
+              properties:
+                stdin:
+                  type: "string"
+                stdout:
+                  type: "string"
+                passed:
+                  type: "boolean"
+          sourceCode:
+            type: object
+            description: "one c file for now"
+            properties:
+              lib/sum.c:
+                type: string
+                example: "..."
+              lib/sum.h:
+                type: string
+                example: "..."
+              main.c:
+                type: string
+                example: "int main() {\n return 0; \n }"
+              Makefile:
+                type: string
+                example: "a.out:\n  gcc main.c"
+              a_lot_of_files...:
+                type: string
+                example: "a lot of code..."
   TaskList:
     type: array
     items:
