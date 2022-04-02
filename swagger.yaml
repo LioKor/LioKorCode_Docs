@@ -1,7 +1,7 @@
 swagger: "2.0"
 info:
   description: "LioKor Code - system for studying programming"
-  version: "0.2.0"
+  version: "0.3.0"
   title: "LioKor Code"
   contact:
     email: "support@liokor.com"
@@ -232,11 +232,11 @@ paths:
         in: "path"
         required: true
         type: "integer"
-      - in: body 
+      - in: body
         name: TaskSolution
         schema:
           $ref: "#/definitions/TaskSolutionSend"
-      consumes: 
+      consumes:
         - application/json
       responses:
         "200":
@@ -442,11 +442,11 @@ definitions:
           items: {}
         example: [
           [
-            "1 2", 
+            "1 2",
             "3"
           ],
           [
-            "-2 2", 
+            "-2 2",
             "0"
           ],
         ]
@@ -485,7 +485,7 @@ definitions:
         description: "When task was checked"
       checkResult:
         type: integer
-        description: "0 - ok, 1 - checking, 2 - compile error, 3 - runtime error, 4 - check error, 5 - outdated, 6 - runtime timeout, 7 - compile timeout, 8 - lint error, 9 - draft"
+        description: "0 - ok, 1 - checking, 2 - compile error, 3 - runtime error, 4 - check error, 5 - outdated, 6 - runtime timeout, 7 - compile timeout, 8 - lint error"
       checkMessage:
         type: string
         description: "Empty or error text (linter, compiler, runtime...)"
