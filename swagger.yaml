@@ -10,7 +10,7 @@ info:
 host: "code.liokor.com"
 basePath: "/api/v1"
 schemes:
-- "http"
+- "https"
 paths:
   /users:
     post:
